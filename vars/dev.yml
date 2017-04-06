@@ -1,0 +1,2 @@
+spark_dir: /opt/spark/default
+dvlogo_env: "development environment"

@@ -1,0 +1,15 @@
+[Unit]
+Description=Spark
+Before=
+After=network.target
+
+[Service]
+Type=forking
+User=root
+Group=root
+ExecStart={{ spark_dir }}/sbin/start-master.sh -h 0.0.0.0 -p 7077
+ExecStop={{ spark_dir }}/sbin/stop-master.sh -h 0.0.0.0 -p 7077
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

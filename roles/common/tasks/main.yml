@@ -1,0 +1,43 @@
+---
+# This playbook contains common plays that will be run on all nodes.
+
+- name: Run the equivalent of "apt-get update" as a separate step
+  apt:
+    update_cache: yes
+  register: apt_result
+  until: apt_result|succeeded
+  retries: 3
+  delay: 1
+  sudo: yes
+  ignore_errors: yes
+
+- locale_gen:
+    name: en_GB.UTF-8
+    state: present
+
+- name: set timezone to UTC
+  timezone:
+    name: UTC
+
+# Modify motd
+- name: Clean default motd files
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - /etc/update-motd.d/00-header
+    - /etc/update-motd.d/10-help-text
+    - /etc/update-motd.d/51-cloudguest
+
+- name: copy datavisor motd
+  template:
+    src: dvlogo.j2
+    dest: /etc/update-motd.d/53-dvlogo
+    owner: root
+    group: root
+    mode: 0755
+
+- replace:
+    dest: /etc/pam.d/login
+    regexp: '^session.*optional.*pam_motd.so.*'
+    replace: 'session    optional     pam_motd.so  motd=/run/motd.dynamic'

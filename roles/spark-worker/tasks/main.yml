@@ -1,0 +1,33 @@
+---
+- name: Ensure Spark directory
+  file:
+    path: "{{ spark_dir }}/sbin"
+    state: directory
+
+- name: Check if systemd exists
+  stat: path=/lib/systemd/system/
+  register: systemd_check
+
+- name: Create spark-env.sh on Worker
+  template:
+    src: spark-env.sh.j2
+    dest: "{{ spark_dir }}/conf/spark-env.sh"
+    mode: 0755
+  notify: "Restart Spark Worker"
+
+- name: Create Spark Worker Serivce (systemd)
+  template:
+    src: spark-slave.service.j2
+    dest: /etc/systemd/system/spark-slave.service
+    owner: root
+    group: root
+    mode: 0777
+  become: true
+  when: systemd_check.stat.exists == true
+  notify: "Restart Spark Worker"
+
+- name: Ensure Spark Worker is running
+  systemd:
+    name: spark-slave
+    state: started
+    daemon_reload: yes

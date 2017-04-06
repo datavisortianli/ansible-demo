@@ -1,0 +1,21 @@
+---
+# Master
+- name: Start Spark Master
+  systemd:
+    name: spark-master
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: Stop Spark Master
+  systemd:
+    name: spark-master
+    state: stopped
+    enabled: no
+
+- name: Restart Spark Master
+  systemd:
+    name: spark-master
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

@@ -1,0 +1,15 @@
+---
+
+- name: Configure Spark Master
+  hosts: tag_role_spark_master
+  become: true
+  roles:
+    - common
+    - spark-master
+
+- name: Configure Spark Workers
+  hosts: tag_role_spark_worker
+  become: true
+  roles:
+    - common
+    - spark-worker
