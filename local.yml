@@ -1,8 +1,8 @@
 - name: local provision with role
   hosts: localhost
   become: true
-  #  vars_files:
-  #    - "vars/{{ env }}.yml"
+    vars_files:
+      - "vars/{{ env }}.yml"
   roles:
     - common
-      #    - "{{ role }}"
+    - "{{ role }}"
