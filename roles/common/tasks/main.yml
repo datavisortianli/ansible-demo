@@ -11,10 +11,9 @@
   sudo: yes
   ignore_errors: yes
 
-- name: Set locale
-  locale_gen:
-  name: en_GB.UTF-8
-  state: present
+- locale_gen:
+    name: en_GB.UTF-8
+    state: present
 
 - name: set timezone to UTC
   timezone:
