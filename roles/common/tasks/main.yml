@@ -15,9 +15,9 @@
     name: en_GB.UTF-8
     state: present
 
-    # - name: set timezone to UTC
-    #   timezone:
-    #     name: UTC
+- name: set timezone to UTC
+    timezone:
+      name: UTC
 
 # Modify motd
 - name: Clean default motd files

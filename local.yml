@@ -2,7 +2,7 @@
   hosts: localhost
   become: true
   vars_files:
-    - "vars/{{ env }}.yml"
+    - "vars/{{ lookup('env', 'dv_en') }}.yml"
   roles:
     - common
-    - "{{ role }}"
+    - "{{ lookup('env', 'dv_role') }}"
