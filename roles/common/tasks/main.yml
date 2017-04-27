@@ -38,3 +38,13 @@
     owner: root
     group: root
     mode: 0755
+
+- name: install awscli
+  pip:
+    name: awscli
+
+- name: Copy Scripts
+  template:
+    src: add_tags.sh.j2
+    dest: /opt/datavisor/scripts/add_tags.sh
+    mode: 0755
