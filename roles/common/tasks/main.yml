@@ -43,6 +43,12 @@
   pip:
     name: awscli
 
+- name: Create datavisor directory
+  file:
+    path: /opt/datavisor/scripts
+    state: directory
+    mode: 0755
+
 - name: Copy Scripts
   template:
     src: add_tags.sh.j2
