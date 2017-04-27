@@ -1,0 +1,9 @@
+---
+# Playbook for spark_worker
+- name: Configure Spark Workers
+  hosts: all
+  become: all
+  roles:
+    - common
+    - openjdk
+    - spark-worker

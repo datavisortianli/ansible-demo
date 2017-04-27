@@ -1,8 +1,0 @@
-- name: local provision with role
-  hosts: localhost
-  become: true
-  vars_files:
-    - "vars/{{ lookup('env', 'dv_en') }}.yml"
-  roles:
-    - common
-    - "{{ lookup('env', 'dv_role') }}"
