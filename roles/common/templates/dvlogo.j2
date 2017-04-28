@@ -14,7 +14,6 @@ echo -e ""
 USER=`whoami`
 HOSTNAME=`uname -n`
 IP=`hostname -i`
-DISK=`df -Ph`
 
 MEMORY=`free -m | grep "Mem" | awk '{print $2,"-",$3,"-",$4}'`
 SWAP=`free -m | grep "Swap" | awk '{print $2,"-",$3,"-",$4}'`
@@ -59,7 +58,6 @@ echo -e "
  $COLOR_COLUMN- Swap in use$RESET_COLORS.........: $COLOR_VALUE $SWAP (total-used-free) MB $RESET_COLORS
  $COLOR_COLUMN- Processes$RESET_COLORS...........: $COLOR_VALUE $PSA running $RESET_COLORS
  $COLOR_COLUMN- System uptime$RESET_COLORS.......: $COLOR_VALUE $upDays days $upHours hours $upMins minutes $upSecs seconds $RESET_COLORS
- $COLOR_COLUMN- Disk space $RESET_COLORS.....: \n$COLOR_VALUE $DISK $RESET_COLORS
 
  ===========================================================================
 "
