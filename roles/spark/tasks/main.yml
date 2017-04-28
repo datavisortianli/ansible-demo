@@ -101,7 +101,7 @@
     group: root
     mode: 0777
   become: true
-  when: systemd_check.stat.exists == true and ("{{ Role }} == 'spark_master'")
+  when: systemd_check.stat.exists == true and (Role == 'spark_master')
   notify: "Restart Spark Master"
 
 - name: Configure Spark Master environment
@@ -135,7 +135,7 @@
     group: root
     mode: 0777
   become: true
-  when: systemd_check.stat.exists == true and ("{{ Role }} == 'spark_worker'")
+  when: systemd_check.stat.exists == true and (Role == 'spark_worker')
   notify: "Restart Spark Worker"
 
 - name: Ensure Spark Worker is running
