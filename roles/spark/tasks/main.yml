@@ -101,7 +101,7 @@
     group: root
     mode: 0777
   become: true
-  when: systemd_check.stat.exists == true and (Role == 'spark_master')
+  when: systemd_check.stat.exists == true and (Role == 'spark-master')
   notify: "Restart Spark Master"
 
 - name: Configure Spark Master environment
@@ -110,7 +110,7 @@
     dest: "{{ spark_usr_parent_dir }}/{{ spark_tar_name }}/conf/spark-env.sh"
     mode: 0755
   notify: "Restart Spark Master"
-  when: Role == 'spark_master'
+  when: Role == 'spark-master'
 
 - name: Configure Spark Worker environment
   template:
@@ -118,14 +118,14 @@
     dest: "{{ spark_usr_parent_dir }}/{{ spark_tar_name }}/conf/spark-env.sh"
     mode: 0755
   notify: "Restart Spark Worker"
-  when: Role == 'spark_worker'
+  when: Role == 'spark-worker'
 
 - name: Ensure Spark Master is running
   systemd:
     name: spark-master
     state: started
     daemon_reload: yes
-  when: Role == 'spark_master'
+  when: Role == 'spark-master'
 
 - name: Create Spark Worker Serivce (systemd)
   template:
@@ -135,7 +135,7 @@
     group: root
     mode: 0777
   become: true
-  when: systemd_check.stat.exists == true and (Role == 'spark_worker')
+  when: systemd_check.stat.exists == true and (Role == 'spark-worker')
   notify: "Restart Spark Worker"
 
 - name: Ensure Spark Worker is running
@@ -143,5 +143,5 @@
     name: spark-slave
     state: started
     daemon_reload: yes
-  when: Role == 'spark_worker'
+  when: Role == 'spark-worker'
 

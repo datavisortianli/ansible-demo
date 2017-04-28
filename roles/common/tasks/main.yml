@@ -55,3 +55,11 @@
     src: add_tags.sh.j2
     dest: /opt/datavisor/scripts/add_tags.sh
     mode: 0755
+
+- name: Set Ansible local
+  template:
+    src: ansbile_hosts.j2
+    dest: /etc/ansible/hosts
+    owner: root
+    group: root
+    mode: 0555
