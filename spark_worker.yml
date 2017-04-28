@@ -1,9 +1,13 @@
 ---
-# Playbook for spark_worker
-- name: Configure Spark Workers
+
+# Playbook for spark (master/worker)
+- name: Configure Spark
   hosts: all
-  become: all
+  gather_facts: yes
+  become: true
+  vars:
+    Role: "{{ Role }}"
   roles:
     - common
     - openjdk
-    - spark-worker
+    - spark
