@@ -58,7 +58,7 @@
 
 - name: Set Ansible local
   template:
-    src: ansbile_hosts.j2
+    src: ansible_hosts.j2
     dest: /etc/ansible/hosts
     owner: root
     group: root
