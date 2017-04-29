@@ -16,9 +16,9 @@
     - sysstat
     - xfsprogs
 
-- name: Set locales
-  sudo: yes
-  command: localectl set-locale LANG=en_US.UTF-8
+# - name: Set locales
+#   sudo: yes
+#   command: localectl set-locale LANG=en_US.UTF-8
 
 - name: Set timezone to UTC
   timezone:
