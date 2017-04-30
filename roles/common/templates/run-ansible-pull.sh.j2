@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
@@ -33,7 +33,7 @@ while [[ $RETRY -lt $RETRIES ]]; do
         -d /opt/ansbile \
         -m git \
         -U ${ANSIBLE_REPO} \
-        -e "Role=${ROLE}"
+        -e "Role=${ROLE}" \
         ${ROLE}.yml >> $OUTPUT 2>&1
     RESULT=$?
     set -e

@@ -52,6 +52,12 @@
 
 # Bind Spark's web UIs to this machine's public EC2 hostname otherwise fallback to private IP:
 # export SPARK_PUBLIC_DNS=`curl http://169.254.169.254/latest/meta-data/public-ipv4`
+if [ $(id -u) == "0" ]
+then
+    ulimit -n 1000000
+fi
+
+export SPARK_PUBLIC_DNS=`curl http://169.254.169.254/latest/meta-data/public-ipv4`
 
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/lib/hadoop/lib/native
 
@@ -59,6 +65,9 @@ export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-/etc/hadoop/conf}
 
 export SPARK_LOG_DIR=${SPARK_LOG_DIR:-{{ spark_log_dir }}}
 export SPARK_PID_DIR=${SPARK_PID_DIR:-{{ spark_run_dir }}}
+
+export SPARK_WORKER_DIR=/mnt/spark-worker-tmp
+export SPARK_LOCAL_DIRS=/mnt/spark-tmp
 
 {% for key, value in spark_env_extras.items() | sort %}
 export {{ key }}="{{ value }}"
