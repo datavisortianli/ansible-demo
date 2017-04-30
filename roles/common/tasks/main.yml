@@ -52,9 +52,12 @@
 
 - name: Copy Scripts
   template:
-    src: add_tags.sh.j2
-    dest: /opt/datavisor/scripts/add_tags.sh
+    src: "{{ item }}.j2"
+    dest: "/opt/datavisor/scripts/{{ item }}"
     mode: 0755
+  with_items:
+    - add_tags.sh
+    - run-ansible-pull.sh
 
 - name: Set Ansible local
   template:
@@ -63,3 +66,4 @@
     owner: root
     group: root
     mode: 0555
+

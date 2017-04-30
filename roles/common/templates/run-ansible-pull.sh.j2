@@ -1,0 +1,60 @@
+#! '/bin/bash'
+
+set -e
+
+# set up to gather output
+OUTPUT=/var/log/ansible-pull.log
+ENV=$1
+ROLE=$2
+ANSIBLE_REPO=$3
+
+# retry controls
+RETRIES=10
+RETRY=0
+
+while [[ $RETRY -lt $RETRIES ]]; do
+    RETRY=$((RETRY + 1))
+
+    # run ansible-pull from the directory containing the repository (and, thus, the inventory file)
+    cd /opt/
+    set +e
+    # if coreutils is not yet installed, we should use ansible pull alone
+    ANSIBLE_PULL=ansible-pull
+    if command -v timeout >/dev/null
+    then
+        ANSIBLE_PULL="timeout -k 2m 40m $ANSIBLE_PULL"
+    elif command -v timelimit >/dev/null
+    then
+        # 2500s ~= 40min
+        ANSIBLE_PULL="timelimit -t 2500 -T 120 $ANSIBLE_PULL"
+    fi
+    $ANSIBLE_PULL  \
+        -C ${ENV} \
+        -d /opt/ansbile \
+        -m git \
+        -U ${ANSIBLE_REPO} \
+        -i localhost \
+        -l "localhost,$(hostname),127.0.0.1" \
+        ${ROLE}.yml >> $OUTPUT 2>&1
+    RESULT=$?
+    set -e
+
+    if [[ $RESULT -eq 0 ]]; then
+        break
+    else
+        echo '==== RETRYING ===='
+        sleep 30
+    fi
+done
+
+if [ $RESULT -ne 0 ]; then
+    echo "ansible-pull run on on "$(uname -n)" failed."
+    echo
+    cat $OUTPUT
+fi
+
+# clean up temp files
+find /opt/.ansible/tmp -type d -mtime +1 -delete
+
+# rm -f "$OUTPUT"
+
