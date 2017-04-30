@@ -1,4 +1,4 @@
-#! '/bin/bash'
+#!/bin/bash
 
 set -e
 
@@ -33,8 +33,7 @@ while [[ $RETRY -lt $RETRIES ]]; do
         -d /opt/ansbile \
         -m git \
         -U ${ANSIBLE_REPO} \
-        -i localhost \
-        -l "localhost,$(hostname),127.0.0.1" \
+        -e "Role=${ROLE}"
         ${ROLE}.yml >> $OUTPUT 2>&1
     RESULT=$?
     set -e
@@ -54,7 +53,7 @@ if [ $RESULT -ne 0 ]; then
 fi
 
 # clean up temp files
-find /opt/.ansible/tmp -type d -mtime +1 -delete
+# find /opt/.ansible/tmp -type d -mtime +1 -delete
 
 # rm -f "$OUTPUT"
 
