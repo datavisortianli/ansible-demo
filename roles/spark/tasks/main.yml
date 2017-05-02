@@ -89,6 +89,32 @@
     src: spark-defaults.conf.j2
     dest: "{{ spark_usr_parent_dir }}/{{ spark_tar_name }}/conf/spark-defaults.conf"
 
+- name: Configure Spark slaves list file
+  template:
+    src: slaves.j2
+    dest: "{{ spark_usr_parent_dir }}/{{ spark_tar_name }}/conf/slaves"
+  when: Role == 'spark-master'
+
+- name: Ensure update_slaves.sh is there
+  template:
+    src: update_slaves.sh.j2
+    dest: /opt/datavisor/scripts/update_slaves.sh
+    owner: root
+    group: root
+    mode: 0755
+  become: true
+  when: Role == 'spark-master'
+
+- name: Set up cron job for update slaves list
+  template:
+    src: cron.d_update_slaves.j2
+    dest: /etc/cron.d/update_slaves
+    owner: root
+    group: root
+    mode: 0755
+  become: true
+  when: Role == 'spark-master'
+
 - name: Check if systemd exists
   stat: path=/lib/systemd/system/
   register: systemd_check
