@@ -111,7 +111,7 @@
     dest: /etc/cron.d/update_slaves
     owner: root
     group: root
-    mode: 0744
+    mode: 0644
   become: true
   when: Role == 'spark-master'
 
