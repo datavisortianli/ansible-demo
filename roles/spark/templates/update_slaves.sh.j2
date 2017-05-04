@@ -10,7 +10,7 @@ CURL=$(which curl)
 SED=$(which sed)
 GREP=$(which grep)
 
-SLAVES_TMP=/tmp/slaves.tmp
+SLAVES_TMP=/tmp/slaves
 SLAVES_LIST_CONF={{ spark_conf_dir }}/conf/slaves
 
 ${CURL} -s "http://localhost:8080/" | ${GREP} ':7078' | ${SED} 's/<[^>]*>//g' | ${AWK} -F ':' '{print $1}' | ${AWK} '{$1=$1};1' > ${SLAVES_TMP}

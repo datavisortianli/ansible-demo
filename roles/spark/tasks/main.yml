@@ -101,7 +101,7 @@
     dest: /opt/datavisor/scripts/update_slaves.sh
     owner: root
     group: root
-    mode: 0755
+    mode: 0744
   become: true
   when: Role == 'spark-master'
 

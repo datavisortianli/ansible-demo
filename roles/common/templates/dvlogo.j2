@@ -13,7 +13,7 @@ echo -e ""
 
 USER=`whoami`
 HOSTNAME=`uname -n`
-IP=`hostname -i`
+IP=`hostname -I`
 
 MEMORY=`free -m | grep "Mem" | awk '{print $2,"-",$3,"-",$4}'`
 SWAP=`free -m | grep "Swap" | awk '{print $2,"-",$3,"-",$4}'`
