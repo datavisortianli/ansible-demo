@@ -105,16 +105,6 @@
   become: true
   when: Role == 'spark-master'
 
-# - name: Set up cron job for update slaves list
-#   template:
-#     src: cron.d_update_slaves.j2
-#     dest: /etc/cron.d/update_slaves
-#     owner: root
-#     group: root
-#     mode: 0644
-#   become: true
-#   when: Role == 'spark-master'
-
 - cron:
     name: "update spark slaves list"
     minute: "*/1"
