@@ -20,4 +20,9 @@ spark_env_extras:
   SPARK_WORKER_MEMORY: "1g"
   SPARK_DAEMON_WORKER_MEMORY: "1g"
   SPARK_DAEMON_MASTER_MEMORY: "8g"
+  SPARK_DAEMON_JAVA_OPTS: "-Dspark.worker.timeout=300 -Dspark.akka.timeout=100 -Dspark.akka.frameSize=100 -Dspark.worker.cleanup.enabled=false -Dspark.worker.cleanup.interval=432000 -Dspark.worker.cle
+anup.appDataTtl=432000 -Dspark.shuffle.consolidateFiles=true -Dspark.eventLog.dir=file:///mnt/spark-events -Dspark.eventLog.compress=true -Dspark.ui.retainedJobs=200 -Xms512m -Djava.io.tmpdir=/mnt/java-tmp"
+  SPARK_JAVA_OPTS: "-Dspark.worker.timeout=300 -Dspark.akka.timeout=100 -Dspark.akka.frameSize=100 -Dspark.worker.cleanup.enabled=false -Dspark.worker.cleanup.interval=432000 -Dspark.worker.cleanup.ap
+pDataTtl=432000 -Dspark.shuffle.consolidateFiles=true -Dspark.eventLog.dir=file:///mnt/spark-events -Dspark.eventLog.compress=true -Dspark.ui.retainedJobs=200 -Xms512m -Djava.io.tmpdir=/mnt/java-tmp"
+
 spark_defaults_extras: {}
