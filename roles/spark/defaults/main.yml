@@ -15,5 +15,9 @@ spark_user: "spark"           # the name of the (OS)user created for spark
 spark_user_groups: []         # Optional list of (OS)groups the new spark user should belong to
 spark_user_shell: "/bin/false"    # the spark user's default shell
 
-spark_env_extras: {}
+spark_env_extras:
+  SPARK_WORKER_INSTANCES: "4"
+  SPARK_WORKER_MEMORY: "1g"
+  SPARK_DAEMON_WORKER_MEMORY: "1g"
+  SPARK_DAEMON_MASTER_MEMORY: "8g"
 spark_defaults_extras: {}
