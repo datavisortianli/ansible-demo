@@ -2,6 +2,15 @@
 
 set -e
 
+##################
+# check variables
+##################
+
+if [ "$#" -ne 3 ]; then
+    echo "Usage: `basename $0` {environment} {git_repo}"
+    exit 1
+fi
+
 # set up to gather output
 OUTPUT=/var/log/ansible-pull.log
 ENV=$1
@@ -12,48 +21,65 @@ ANSIBLE_REPO=$3
 RETRIES=10
 RETRY=0
 
-while [[ $RETRY -lt $RETRIES ]]; do
-    RETRY=$((RETRY + 1))
+LOCKFILE=/var/run/run-ansible-pull.pid
 
-    # run ansible-pull from the directory containing the repository (and, thus, the inventory file)
-    cd /opt/
-    set +e
-    # if coreutils is not yet installed, we should use ansible pull alone
-    ANSIBLE_PULL=ansible-pull
-    if command -v timeout >/dev/null
-    then
-        ANSIBLE_PULL="timeout -k 2m 40m $ANSIBLE_PULL"
-    elif command -v timelimit >/dev/null
-    then
-        # 2500s ~= 40min
-        ANSIBLE_PULL="timelimit -t 2500 -T 120 $ANSIBLE_PULL"
+if ( set -o noclobber; echo "$$" > "$LOCKFILE") 2> /dev/null;
+then
+    trap 'rm -f "$LOCKFILE"; exit $?' INT TERM EXIT
+
+    ####################
+    # run ansible-pull
+    ####################
+
+    while [[ $RETRY -lt $RETRIES ]]; do
+        RETRY=$((RETRY + 1))
+
+        # run ansible-pull from the directory containing the repository (and, thus, the inventory file)
+        cd /opt/
+        set +e
+        # if coreutils is not yet installed, we should use ansible pull alone
+        ANSIBLE_PULL=ansible-pull
+        if command -v timeout >/dev/null
+        then
+            ANSIBLE_PULL="timeout -k 2m 40m $ANSIBLE_PULL"
+        elif command -v timelimit >/dev/null
+        then
+            # 2500s ~= 40min
+            ANSIBLE_PULL="timelimit -t 2500 -T 120 $ANSIBLE_PULL"
+        fi
+        $ANSIBLE_PULL  \
+            -C ${ENV} \
+            -d /opt/ansbile \
+            -m git \
+            -U ${ANSIBLE_REPO} \
+            -e "Role=${ROLE}" \
+            ${ROLE}.yml >> $OUTPUT 2>&1
+        RESULT=$?
+        set -e
+
+        if [[ $RESULT -eq 0 ]]; then
+            break
+        else
+            echo '==== RETRYING ===='
+            sleep 30
+        fi
+    done
+
+    if [ $RESULT -ne 0 ]; then
+        echo "ansible-pull run on on "$(uname -n)" failed."
+        echo
+        cat $OUTPUT
     fi
-    $ANSIBLE_PULL  \
-        -C ${ENV} \
-        -d /opt/ansbile \
-        -m git \
-        -U ${ANSIBLE_REPO} \
-        -e "Role=${ROLE}" \
-        ${ROLE}.yml >> $OUTPUT 2>&1
-    RESULT=$?
-    set -e
 
-    if [[ $RESULT -eq 0 ]]; then
-        break
-    else
-        echo '==== RETRYING ===='
-        sleep 30
-    fi
-done
 
-if [ $RESULT -ne 0 ]; then
-    echo "ansible-pull run on on "$(uname -n)" failed."
-    echo
-    cat $OUTPUT
+    rm -f "$LOCKFILE"
+    trap - INT TERM EXIT
+else
+    echo "Failed to acquire lockfile: $LOCKFILE."
+    echo "Held by $(cat $LOCKFILE)"
 fi
 
 # clean up temp files
 # find /opt/.ansible/tmp -type d -mtime +1 -delete
 
 # rm -f "$OUTPUT"
-

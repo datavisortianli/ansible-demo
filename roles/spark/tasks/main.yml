@@ -89,6 +89,11 @@
     src: spark-defaults.conf.j2
     dest: "{{ spark_usr_parent_dir }}/{{ spark_tar_name }}/conf/spark-defaults.conf"
 
+- name: Configure log4j properties
+  template:
+    src: log4j.properties.j2
+    dest: "{{ spark_usr_parent_dir }}/{{ spark_tar_name }}/conf/log4j.properties"
+
 - name: Configure Spark slaves list file
   template:
     src: slaves.j2
