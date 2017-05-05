@@ -9,11 +9,12 @@ AWK=$(which awk)
 CURL=$(which curl)
 SED=$(which sed)
 GREP=$(which grep)
+UNIQ=$(which uniq)
 
 SLAVES_TMP=/tmp/slaves
 SLAVES_LIST_CONF={{ spark_conf_dir }}/conf/slaves
 
-${CURL} -s "http://localhost:8080" | ${GREP} -E "worker-[0-9]{4}(0[1-9]|1[0-2])([0-3][1-9])" | ${SED} 's/<[^>]*>//g' | ${AWK} -F '-' '{print $3}' > ${SLAVES_TMP}
+${CURL} -s "http://localhost:8080" | ${GREP} -E "worker-[0-9]{4}(0[1-9]|1[0-2])([0-3][1-9])" | ${SED} 's/<[^>]*>//g' | ${AWK} -F '-' '{print $3}' | ${UNIQ} > ${SLAVES_TMP}
 
 DIFF=$(diff ${SLAVES_TMP} ${SLAVES_LIST_CONF})
 if [ "$DIFF" != "" ]
