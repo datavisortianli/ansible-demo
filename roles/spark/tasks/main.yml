@@ -43,14 +43,14 @@
     url: "{{ spark_mirror }}/spark-{{ spark_version }}/{{ spark_tar_name }}.tgz"
     dest: "{{ spark_src_dir }}"
   when: not spark_dir_exist.stat.exists
-  register: new_downloaded
+  register: downloaded
 
 - name: Extract Spark distribution
   unarchive:
     src: "{{ spark_src_dir }}/{{ spark_tar_name }}.tgz"
     dest: "{{ spark_usr_parent_dir }}"
     copy: false
-  when: new_downloaded
+  when: downloaded.changed
 
 - name: Setup Spark distribution symlinks
   file:
