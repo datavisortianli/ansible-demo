@@ -1,4 +1,15 @@
 ---
+- name: Modify sysctl for Spark Master
+  template:
+    src: sysctl.conf.j2
+    dest: /etc/sysctl.conf
+    owner: root
+    groups: root
+    mode: 0644
+  become: true
+  when: Role == 'spark-master'
+  notify: "Reload sysctl.conf"
+
 - name: Create service account for Spark
   user:
     name: "{{ spark_user }}"

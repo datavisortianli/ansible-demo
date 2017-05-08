@@ -1,4 +1,8 @@
 ---
+- name: Reload sysctl.conf
+  command: /sbin/sysctl -p
+  become: true
+
 # Master
 - name: Start Spark Master
   systemd:
